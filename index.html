@@ -153,53 +153,67 @@
     <label>Coins / PP</label>
     <input type="number" id="coins" placeholder="Enter coins or PP">
 
-    <button onclick="compare()">Check Value</button>
-
     <div id="error" class="error"></div>
     <div id="resultA" class="result"></div>
     <div id="resultB" class="result"></div>
+    <div id="valueDisplay" class="baseline"></div>
   </div>
 
   <script>
-    function compare() {
-      const gems = parseFloat(document.getElementById('gems').value);
-      const coins = parseFloat(document.getElementById('coins').value);
+  const gemsInput = document.getElementById('gems');
+  const coinsInput = document.getElementById('coins');
 
-      const resultA = document.getElementById('resultA');
-      const resultB = document.getElementById('resultB');
-      const error = document.getElementById('error');
+  gemsInput.addEventListener('input', compare);
+  coinsInput.addEventListener('input', compare);
 
-      resultA.className = "result";
-      resultB.className = "result";
-      error.innerText = "";
+  function compare() {
+    const gems = parseFloat(gemsInput.value);
+    const coins = parseFloat(coinsInput.value);
 
-      if (!gems || !coins) {
-        error.innerText = "Please enter valid numbers";
-        resultA.innerText = "";
-        resultB.innerText = "";
-        return;
-      }
+    const resultA = document.getElementById('resultA');
+    const resultB = document.getElementById('resultB');
+    const error = document.getElementById('error');
+    const valueDisplay = document.getElementById('valueDisplay');
 
-      const baselineA = 2000 / 79;
-      const baselineB = 5000 / 79;
-      const userRatio = coins / gems;
+    resultA.className = "result";
+    resultB.className = "result";
+    error.innerText = "";
+    valueDisplay.innerText = "";
 
-      if (userRatio >= baselineA) {
-        resultA.innerText = "✅ Worth (2000 baseline)";
-        resultA.classList.add("worth");
-      } else {
-        resultA.innerText = "❌ Not worth (2000 baseline)";
-        resultA.classList.add("not-worth");
-      }
-
-      if (userRatio >= baselineB) {
-        resultB.innerText = "✅ Worth (5000 baseline)";
-        resultB.classList.add("worth");
-      } else {
-        resultB.innerText = "❌ Not worth (5000 baseline)";
-        resultB.classList.add("not-worth");
-      }
+    if (!gems || !coins) {
+      resultA.innerText = "";
+      resultB.innerText = "";
+      return;
     }
-  </script>
+
+    const baselineA = 2000 / 79;
+    const baselineB = 5000 / 79;
+    const userRatio = coins / gems;
+
+    // Show values
+    valueDisplay.innerText =
+      `Your value: ${userRatio.toFixed(2)} | ` +
+      `Baseline A: ${baselineA.toFixed(2)} | ` +
+      `Baseline B: ${baselineB.toFixed(2)}`;
+
+    // Compare A
+    if (userRatio >= baselineA) {
+      resultA.innerText = "✅ Worth (2000 baseline)";
+      resultA.classList.add("worth");
+    } else {
+      resultA.innerText = "❌ Not worth (2000 baseline)";
+      resultA.classList.add("not-worth");
+    }
+
+    // Compare B
+    if (userRatio >= baselineB) {
+      resultB.innerText = "✅ Worth (5000 baseline)";
+      resultB.classList.add("worth");
+    } else {
+      resultB.innerText = "❌ Not worth (5000 baseline)";
+      resultB.classList.add("not-worth");
+    }
+  }
+</script>
 </body>
 </html>
