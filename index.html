@@ -15,13 +15,16 @@
 
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       margin: 0;
+      min-height: 100vh;
       background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
       color: #e0e0e0;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     .card {
@@ -33,6 +36,8 @@
       width: 90%;
       max-width: 380px;
       border: 1px solid rgba(255,255,255,0.05);
+
+      margin: auto;
     }
 
     h3 {
@@ -123,12 +128,20 @@
       margin-top: 10px;
     }
 
+    .footer {
+      text-align: center;
+      padding: 14px;
+      font-size: 11px;
+      color: #777;
+    }
+
     @media (max-width: 480px) {
       h3 {
         font-size: 26px;
       }
 
-      input, button {
+      input,
+      button {
         font-size: 18px;
         padding: 16px;
       }
@@ -141,6 +154,9 @@
 </head>
 
 <body>
+
+<div class="page">
+
   <div class="card">
     <h3>💎 Brawl Stars Offer Comparator</h3>
 
@@ -159,61 +175,78 @@
     <div id="valueDisplay" class="baseline"></div>
   </div>
 
-  <script>
-  const gemsInput = document.getElementById('gems');
-  const coinsInput = document.getElementById('coins');
+  <footer class="footer">
+    👁️ <span id="views">...</span> views
+  </footer>
 
-  gemsInput.addEventListener('input', compare);
-  coinsInput.addEventListener('input', compare);
+</div>
 
-  function compare() {
-    const gems = parseFloat(gemsInput.value);
-    const coins = parseFloat(coinsInput.value);
+<script>
+const gemsInput = document.getElementById('gems');
+const coinsInput = document.getElementById('coins');
 
-    const resultA = document.getElementById('resultA');
-    const resultB = document.getElementById('resultB');
-    const error = document.getElementById('error');
-    const valueDisplay = document.getElementById('valueDisplay');
+gemsInput.addEventListener('input', compare);
+coinsInput.addEventListener('input', compare);
 
-    resultA.className = "result";
-    resultB.className = "result";
-    error.innerText = "";
-    valueDisplay.innerText = "";
+function compare() {
+  const gems = parseFloat(gemsInput.value);
+  const coins = parseFloat(coinsInput.value);
 
-    if (!gems || !coins) {
-      resultA.innerText = "";
-      resultB.innerText = "";
-      return;
-    }
+  const resultA = document.getElementById('resultA');
+  const resultB = document.getElementById('resultB');
+  const error = document.getElementById('error');
+  const valueDisplay = document.getElementById('valueDisplay');
 
-    const baselineA = 2000 / 79;
-    const baselineB = 5000 / 79;
-    const userRatio = coins / gems;
+  resultA.className = "result";
+  resultB.className = "result";
+  error.innerText = "";
+  valueDisplay.innerText = "";
 
-    // Show values
-    valueDisplay.innerText =
-      `Your value: ${userRatio.toFixed(2)} | ` +
-      `Baseline A: ${baselineA.toFixed(2)} | ` +
-      `Baseline B: ${baselineB.toFixed(2)}`;
-
-    // Compare A
-    if (userRatio >= baselineA) {
-      resultA.innerText = "✅ Worth (2000 baseline)";
-      resultA.classList.add("worth");
-    } else {
-      resultA.innerText = "❌ Not worth (2000 baseline)";
-      resultA.classList.add("not-worth");
-    }
-
-    // Compare B
-    if (userRatio >= baselineB) {
-      resultB.innerText = "✅ Worth (5000 baseline)";
-      resultB.classList.add("worth");
-    } else {
-      resultB.innerText = "❌ Not worth (5000 baseline)";
-      resultB.classList.add("not-worth");
-    }
+  if (!gems || !coins) {
+    resultA.innerText = "";
+    resultB.innerText = "";
+    return;
   }
+
+  const baselineA = 2000 / 79;
+  const baselineB = 5000 / 79;
+  const userRatio = coins / gems;
+
+  valueDisplay.innerText =
+    `Your value: ${userRatio.toFixed(2)} | ` +
+    `Baseline A: ${baselineA.toFixed(2)} | ` +
+    `Baseline B: ${baselineB.toFixed(2)}`;
+
+  if (userRatio >= baselineA) {
+    resultA.innerText = "✅ Worth (2000 baseline)";
+    resultA.classList.add("worth");
+  } else {
+    resultA.innerText = "❌ Not worth (2000 baseline)";
+    resultA.classList.add("not-worth");
+  }
+
+  if (userRatio >= baselineB) {
+    resultB.innerText = "✅ Worth (5000 baseline)";
+    resultB.classList.add("worth");
+  } else {
+    resultB.innerText = "❌ Not worth (5000 baseline)";
+    resultB.classList.add("not-worth");
+  }
+}
 </script>
+
+<script>
+fetch('https://countapi.mileshilliard.com/api/v1/hit/boypipe-bs-offer-calculator')
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('views').textContent =
+      data.value.toLocaleString();
+  })
+  .catch(err => {
+    console.error(err);
+    document.getElementById('views').textContent = '?';
+  });
+</script>
+
 </body>
 </html>
