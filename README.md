@@ -1,3 +1,7 @@
+# Brawl Stars Offer Comparator
+
+Just a simple calculator to calculate whether Brawler fuel offers in the shop are worth it or not.
+
 Site live at: https://boypipe.github.io/bs-offer-calculator/
 
 
